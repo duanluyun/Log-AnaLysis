@@ -79,6 +79,28 @@ def reformat(time):
 
 ### 2.Find location from Ip
 
-![Source Image](https://github.com/duanluyun/HandWritten_Digit_Recoganition/raw/master/Image/1.png)
+#### Scala
+
+##### 1. DownLoad Ipdata base from github
+
+![Source Image](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180831234656.png)
+
+##### 2. Import Maven dependency
+![Import dependency](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180831234656.png)
+
+```Scala
+import com.ggstar.util.ip.IpHelper
+
+/**
+  * Ip解析工具类
+  */
+object IpUtils {
+
+  def getCity(ip:String)={
+    IpHelper.findRegionByIp(ip)
+  }
+
+}
+```
 
 
