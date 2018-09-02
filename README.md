@@ -23,7 +23,7 @@ Logs analysis is an ideal use case for Spark. It's a very large, common data sou
 
 ###1. Conversion between the two forms of date and time
 ####Scala
-'''Scala
+```scala
 import java.util.{Date, Locale}
 import org.apache.commons.lang3.time.FastDateFormat
 /**
@@ -51,9 +51,7 @@ object DateUtils {
       }
     }
   }
-
-
-'''
+```
 
 ####Python
 
