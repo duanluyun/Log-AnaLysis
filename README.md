@@ -77,7 +77,7 @@ def reformat(time):
 
 ```
 
-![Python SparkStatFromatJob](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902210627.png)
+![Python SparkStatFromatJob](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902210756.png)
 
 
 ### 2.Find location from Ip
