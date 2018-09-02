@@ -53,6 +53,9 @@ object DateUtils {
   }
 ```
 
+![Scala SparkStatFromatJob](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902210627.png)
+
+
 #### Python
 
 ```python
@@ -63,7 +66,7 @@ def getTimeStr(time):
         time_str=time[time.index('[')+1:time.index(' ')]
         return time_str
     except:
-        return '0l'
+        return '0'
 
 
 def reformat(time):
@@ -74,7 +77,7 @@ def reformat(time):
 
 ```
 
-
+![Python SparkStatFromatJob](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902210627.png)
 
 
 ### 2.Find location from Ip
