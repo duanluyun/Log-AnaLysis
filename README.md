@@ -1,4 +1,4 @@
-# HandWritten_Digit_Recoganition
+# Spark logs Analyzer
 Logs analysis is an ideal use case for Spark. It's a very large, common data source and contains a rich set of information.Logs data can be used for monitoring your servers, improving business and customer intelligence, building recommendation systems, preventing fraud, and much more.This project will show you to use Apache Spark on your organization's production logs and fully harness the power of that data. 
 
 
@@ -142,3 +142,191 @@ def getIp(ip):
 
 ![AccessConvertUtil](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902212359.png)
 
+## Write To Database
+
+### 1.MysqlUtils to get and relese Connection
+```scala
+package com.sam
+
+import java.sql.{Connection, DriverManager, PreparedStatement}
+
+object MysqlUtils {
+
+  def getConnection()={
+    DriverManager.getConnection("jdbc:mysql://localhost:3306/logproject?user=root&password=dly920329")
+  }
+
+  def release(connection:Connection,pstmt:PreparedStatement )={
+    try{
+      if (pstmt!=null){
+        pstmt.close()
+      }
+
+    }catch{
+      case e:Exception=>{e.printStackTrace()}
+    }finally {
+      if (connection!=null){
+        connection.close()
+      }
+    }
+
+  }
+ }
+```
+### 2.Create case class
+```scala
+case class DayCityVideoAccessStat(day:String, cmsId:Long, city:String, times:Long, timesRank:Int)
+
+case class DayVideoAccessStat(day:String,cmsId:Long,times:Long)
+
+case class DayVideoTrafficsStat (day:String,cms_id:Long,traffics:Long)
+```
+### 3.DAO
+```scala
+package com.sam
+
+import java.sql.{PreparedStatement,Connection}
+
+import scala.collection.mutable.ListBuffer
+
+object StatDAO {
+
+  def insertDayVideoAccessTopN(list:ListBuffer[DayVideoAccessStat])={
+
+    var connection:Connection=null
+      var pstmt:PreparedStatement=null
+
+    try{
+
+      connection=MysqlUtils.getConnection()
+
+      connection.setAutoCommit(false)
+      val sql="insert into day_video_access_topn_stat(day,cms_id,times) values(?,?,?)"
+
+      pstmt=connection.prepareStatement(sql)
+
+      for(ele<-list){
+        pstmt.setString(1,ele.day)
+        pstmt.setLong(2,ele.cmsId)
+        pstmt.setLong(3,ele.times)
+
+        pstmt.addBatch()
+      }
+
+      pstmt.executeBatch()
+
+      connection.commit()
+
+    }catch{
+
+      case e:Exception=>e.printStackTrace()
+
+    }finally{
+      MysqlUtils.release(connection,pstmt)
+
+    }
+
+  }
+
+
+  def insertDayCityVideoAccessTopN(list:ListBuffer[DayCityVideoAccessStat])={
+
+    var connection:Connection=null
+    var pstmt:PreparedStatement=null
+
+    try{
+
+      connection=MysqlUtils.getConnection()
+
+      connection.setAutoCommit(false)
+      val sql="insert into  day_video_city_access_topn_stat(day,cms_id,city,times,times_rank) values(?,?,?,?,?)"
+
+      pstmt=connection.prepareStatement(sql)
+
+      for(ele<-list){
+        pstmt.setString(1,ele.day)
+        pstmt.setLong(2,ele.cmsId)
+        pstmt.setString(3,ele.city)
+        pstmt.setLong(4,ele.times)
+        pstmt.setInt(5,ele.timesRank)
+
+        pstmt.addBatch()
+      }
+
+      pstmt.executeBatch()
+
+      connection.commit()
+
+    }catch{
+
+      case e:Exception=>e.printStackTrace()
+
+    }finally{
+      MysqlUtils.release(connection,pstmt)
+
+    }
+
+  }
+
+
+  def insertDayVideoTrafficsAccessTopN(list:ListBuffer[DayVideoTrafficsStat]): Unit ={
+
+    var connection:Connection=null
+    var pstmt:PreparedStatement=null
+    try{
+      connection=MysqlUtils.getConnection()
+      connection.setAutoCommit(false)
+      val sql="insert into day_video_traffics_topn_stat(day,cms_id,traffics) values(?,?,?)"
+      pstmt=connection.prepareStatement(sql)
+
+      for(ele<-list){
+        pstmt.setString(1,ele.day)
+        pstmt.setLong(2,ele.cms_id)
+        pstmt.setLong(3,ele.traffics)
+        pstmt.addBatch()
+
+      }
+
+      pstmt.executeBatch()
+      connection.commit()
+
+    }catch{
+      case e:Exception=>e.printStackTrace()
+
+    }finally{
+
+      MysqlUtils.release(connection,pstmt)
+
+    }
+
+  }
+
+  def DeleteData(day:String): Unit ={
+    val tables=Array("day_video_access_topn_stat"," day_video_city_access_topn_stat","day_video_traffics_topn_stat")
+
+    var connection:Connection=null
+    var pstmt:PreparedStatement=null
+
+    try{
+      connection=MysqlUtils.getConnection()
+      for(table<-tables){
+
+        val deleteSQL=s"delete from $table where day = ?"
+        pstmt=connection.prepareStatement(deleteSQL)
+        pstmt.setString(1,day)
+        pstmt.executeUpdate()
+
+      }
+
+    }catch{
+      case e:Exception=>e.printStackTrace()
+    }finally{
+      MysqlUtils.release(connection,pstmt)
+    }
+
+  }
+
+}
+
+
+```
