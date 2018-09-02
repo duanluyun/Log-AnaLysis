@@ -86,7 +86,7 @@ def reformat(time):
 ![Source Image](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180831234656.png)
 
 ##### 2. Import Maven dependency
-![Import dependency](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180831234656.png)
+![Import dependency](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902204416.png)
 
 ```Scala
 import com.ggstar.util.ip.IpHelper
@@ -101,6 +101,37 @@ object IpUtils {
   }
 
 }
+```
+
+#### Python
+```python
+import geoip2.database
+
+
+
+def getIp(ip):
+
+    reader = geoip2.database.Reader('/home/sam/Documents/spark/data/GeoLite2-City_20180807/GeoLite2-City.mmdb')
+    response=reader.city(ip)
+    city="{}".format(response.subdivisions.most_specific.names["zh-CN"])
+    return city
+    # 有多种语言，我们这里主要输出英文和中文
+    #print("你查询的IP的地理位置是:")
+    #print("地区：{}({})".format(response.continent.names["es"],response.continent.names["zh-CN"]))
+
+    #print("国家：{}({}) ，简称:{}".format(response.country.name,response.country.names["zh-CN"],response.country.iso_code))
+
+    #print("洲／省：{}({})".format(response.subdivisions.most_specific.name,response.subdivisions.most_specific.names["zh-CN"]))
+
+    # print("城市：{}({})".format(response.city.name, response.city.names["zh-CN"]))
+    #
+    # print("经度：{}，纬度{}".format(response.location.longitude,response.location.latitude))
+    #
+    # print("时区：{}".format(response.location.time_zone))
+    #
+    # print("邮编:{}".format(response.postal.code))
+
+
 ```
 
 
