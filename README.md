@@ -330,3 +330,8 @@ object StatDAO {
 
 
 ```
+### 4.Data visualization
+![Data visualization](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902105123.png)
+![Data visualization](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902105141.png)
+![Data visualization](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902110337.png)
+
