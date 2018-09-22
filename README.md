@@ -336,7 +336,9 @@ object StatDAO {
 ![Data visualization](https://github.com/duanluyun/Log-AnaLysis/blob/master/images/DeepinScreenshot_select-area_20180902110337.png)
 
 ### 5.Spark on Yarn
-#### 1.Create Tables
+#### 1、Set  either HADOOP_CONF_DIR or YARN_CONF_DIR  in the enviroment
+export HADOOP_CONF_DIR=/home/sam/local/hadoop-2.6.0-cdh5.7.0/etc/hadoop
+#### 2.Create Tables
 ```SQL
 create table day_video_access_topn_stat (
 day varchar(8) not null,
@@ -361,4 +363,44 @@ cms_id bigint(10) not null,
 traffics bigint(20) not null,
 primary key (day, cms_id)
 );
+```
+#### 3、Add plugin to pom.xml
+```
+<plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <configuration>
+        <archive>
+            <manifest>
+                <mainClass></mainClass>
+            </manifest>
+        </archive>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+    </configuration>
+</plugin>
+```
+#### 4.mvn assembly:assembly
+#### 5.Submit
+```
+./bin/spark-submit \
+--class com.log.SparkStatCleanJobYARN \
+--name SparkStatCleanJobYARN \
+--master yarn \
+--executor-memory 1G \
+--num-executors 1 \
+--files /home/sam/lib/ipDatabase.csv,/home/sam/hadoop/lib/ipRegion.xlsx \
+/home/sam/hadoop/lib/sql-1.0-jar-with-dependencies.jar \
+hdfs://localhost:8020/input/* hdfs://localhost:8020/clean
+```
+```
+
+./bin/spark-submit \
+--class com.log.TopNStatJobYARN \
+--name TopNStatJobYARN \
+--master yarn \
+--executor-memory 1G \
+--num-executors 1 \
+/home/sam/hadoop/lib/sql-1.0-jar-with-dependencies.jar \
+hdfs://hadoop001:8020/clean 20170511 
 ```
