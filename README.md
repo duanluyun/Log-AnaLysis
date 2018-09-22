@@ -394,7 +394,6 @@ primary key (day, cms_id)
 hdfs://localhost:8020/input/* hdfs://localhost:8020/clean
 ```
 ```
-
 ./bin/spark-submit \
 --class com.log.TopNStatJobYARN \
 --name TopNStatJobYARN \
@@ -402,5 +401,17 @@ hdfs://localhost:8020/input/* hdfs://localhost:8020/clean
 --executor-memory 1G \
 --num-executors 1 \
 /home/sam/hadoop/lib/sql-1.0-jar-with-dependencies.jar \
-hdfs://hadoop001:8020/clean 20170511 
+hdfs://localhost:8020/clean 20170511 
+```
+#### 6.Adjust shuffle partitions
+```
+./bin/spark-submit \
+--class com.imooc.log.TopNStatJobYARN \
+--name TopNStatJobYARN \
+--master yarn \
+--executor-memory 1G \
+--num-executors 1 \
+--conf spark.sql.shuffle.partitions=100 \
+/home/sam/hadoop/lib/sql-1.0-jar-with-dependencies.jar \
+hdfs://localhost:8020/clean 20170511 
 ```
